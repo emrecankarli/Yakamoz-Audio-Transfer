@@ -9,6 +9,7 @@ Yakamoz is a simple application for streaming audio from one computer to another
 *   **Low Latency**: Optimized for low-latency audio streaming.
 *   **Ping Measurement**: Real-time latency display.
 *   **Multi-language Support**: Available in English and Turkish.
+*   **Customizable Theme**: Choose appearance mode and accent colors.
 *   **System Tray Mode**: Minimizes to the system tray for convenience.
 
 ## Requirements

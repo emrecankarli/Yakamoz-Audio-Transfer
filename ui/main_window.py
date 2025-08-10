@@ -15,8 +15,11 @@ import threading
 from PIL import Image
 import pystray
 
-customtkinter.set_appearance_mode("dark")
-customtkinter.set_default_color_theme("blue")
+# load appearance settings before creating widgets
+_appearance = load_setting("appearance_mode", "dark")
+_color_theme = load_setting("color_theme", "blue")
+customtkinter.set_appearance_mode(_appearance)
+customtkinter.set_default_color_theme(_color_theme)
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -75,6 +78,16 @@ class App(customtkinter.CTk):
         save_setting("language", language)
         self.title(i18n.get("app_title"))
         # Arayüzü yeniden çiz
+        self.show_frame(self.current_frame.__class__)
+
+    def change_appearance(self, mode):
+        customtkinter.set_appearance_mode(mode)
+        save_setting("appearance_mode", mode)
+        self.show_frame(self.current_frame.__class__)
+
+    def change_color_theme(self, theme):
+        customtkinter.set_default_color_theme(theme)
+        save_setting("color_theme", theme)
         self.show_frame(self.current_frame.__class__)
 
     def show_frame(self, frame_class):
@@ -160,21 +173,77 @@ class MainMenuFrame(customtkinter.CTkFrame):
 
         # Language Selection
         lang_frame = customtkinter.CTkFrame(self, fg_color="transparent")
-        lang_frame.grid(row=3, column=0, pady=(20, 20))
-        
+        lang_frame.grid(row=3, column=0, pady=(20, 10))
+
         self.lang_label = customtkinter.CTkLabel(lang_frame, text="Dil/Language:")
         self.lang_label.pack(side="left", padx=(0, 10))
 
         self.lang_menu = customtkinter.CTkOptionMenu(lang_frame, values=["Türkçe", "English"],
                                                      command=self.change_language_ui)
-        
+
         current_lang_ui = "Türkçe" if i18n.language == "tr" else "English"
         self.lang_menu.set(current_lang_ui)
         self.lang_menu.pack(side="left")
 
+        # Appearance Mode Selection
+        appearance_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+        appearance_frame.grid(row=4, column=0, pady=(0, 10))
+
+        self.appearance_label = customtkinter.CTkLabel(appearance_frame, text=i18n.get("appearance_mode_label"))
+        self.appearance_label.pack(side="left", padx=(0, 10))
+
+        appearance_values = [i18n.get("light_mode"), i18n.get("dark_mode"), i18n.get("system_mode")]
+        self.appearance_menu = customtkinter.CTkOptionMenu(
+            appearance_frame, values=appearance_values, command=self.change_appearance_ui
+        )
+        current_mode = load_setting("appearance_mode", "dark")
+        appearance_map = {
+            "light": i18n.get("light_mode"),
+            "dark": i18n.get("dark_mode"),
+            "system": i18n.get("system_mode"),
+        }
+        self.appearance_menu.set(appearance_map.get(current_mode, i18n.get("dark_mode")))
+        self.appearance_menu.pack(side="left")
+
+        # Color Theme Selection
+        theme_frame = customtkinter.CTkFrame(self, fg_color="transparent")
+        theme_frame.grid(row=5, column=0, pady=(0, 20))
+
+        self.theme_label = customtkinter.CTkLabel(theme_frame, text=i18n.get("color_theme_label"))
+        self.theme_label.pack(side="left", padx=(0, 10))
+
+        theme_values = [i18n.get("blue_theme"), i18n.get("green_theme"), i18n.get("dark_blue_theme")]
+        self.theme_menu = customtkinter.CTkOptionMenu(
+            theme_frame, values=theme_values, command=self.change_theme_ui
+        )
+        current_theme = load_setting("color_theme", "blue")
+        theme_map = {
+            "blue": i18n.get("blue_theme"),
+            "green": i18n.get("green_theme"),
+            "dark-blue": i18n.get("dark_blue_theme"),
+        }
+        self.theme_menu.set(theme_map.get(current_theme, i18n.get("blue_theme")))
+        self.theme_menu.pack(side="left")
+
     def change_language_ui(self, choice):
         lang_code = "tr" if choice == "Türkçe" else "en"
         self.master.change_language(lang_code)
+
+    def change_appearance_ui(self, choice):
+        mapping = {
+            i18n.get("light_mode"): "light",
+            i18n.get("dark_mode"): "dark",
+            i18n.get("system_mode"): "system",
+        }
+        self.master.change_appearance(mapping.get(choice, "dark"))
+
+    def change_theme_ui(self, choice):
+        mapping = {
+            i18n.get("blue_theme"): "blue",
+            i18n.get("green_theme"): "green",
+            i18n.get("dark_blue_theme"): "dark-blue",
+        }
+        self.master.change_color_theme(mapping.get(choice, "blue"))
 
 class SenderFrame(customtkinter.CTkFrame):
     def __init__(self, master):

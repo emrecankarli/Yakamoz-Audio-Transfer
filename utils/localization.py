@@ -25,7 +25,15 @@ TRANSLATIONS = {
         "ping_label": "Ping: -",
         "ping_na": "Ping: N/A",
         "yakamoz_title": "Yakamoz",
-        "yakamoz_subtitle": "PC to PC Audio Transfer"
+        "yakamoz_subtitle": "PC to PC Audio Transfer",
+        "appearance_mode_label": "Appearance Mode:",
+        "color_theme_label": "Color Theme:",
+        "light_mode": "Light",
+        "dark_mode": "Dark",
+        "system_mode": "System",
+        "blue_theme": "Blue",
+        "green_theme": "Green",
+        "dark_blue_theme": "Dark Blue",
     },
     "tr": {
         "app_title": "Yakamoz - PC'den PC'ye Ses Aktarımı",
@@ -47,9 +55,18 @@ TRANSLATIONS = {
         "ping_label": "Ping: -",
         "ping_na": "Ping: N/A",
         "yakamoz_title": "Yakamoz",
-        "yakamoz_subtitle": "PC'den PC'ye Ses Aktarımı"
-    }
+        "yakamoz_subtitle": "PC'den PC'ye Ses Aktarımı",
+        "appearance_mode_label": "Görünüm Modu:",
+        "color_theme_label": "Renk Teması:",
+        "light_mode": "Açık",
+        "dark_mode": "Koyu",
+        "system_mode": "Sistem",
+        "blue_theme": "Mavi",
+        "green_theme": "Yeşil",
+        "dark_blue_theme": "Lacivert",
+    },
 }
+
 
 class I18n:
     def __init__(self, language="tr"):
@@ -58,8 +75,11 @@ class I18n:
     def get(self, key):
         return TRANSLATIONS.get(self.language, {}).get(key, key)
 
+
 # Global instance
 i18n = I18n()
 
+
 def set_language(language):
     i18n.language = language
+
